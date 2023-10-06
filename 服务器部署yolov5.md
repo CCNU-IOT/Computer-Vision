@@ -1,0 +1,37 @@
+- 安装python3.9(可跳过)
+	- wget https://www.python.org/ftp/python/3.9.7/Python-3.9.7.tgz
+	- tar -zxvf Python-3.9.7.tgz
+	- cd Python-3.9.7
+	- ./configure --prefix=/usr/local/python
+	- make -j2 && make install
+	- 更改链接（服务器一般都配有python，需要删除原来的链接，才能保证使用的python、pip指令是3.9版本的）
+		- which python
+		- cd 该目录
+		- la -l python     查看链接建立的时间和对象
+		- ln -s /usr/local/python/bin/python3.9 /usr/bin/python     建立链接
+		- 同理pip也是（不要管pip3，不使用其即可）ln -s /usr/local/python/bin/pip3.9 /usr/local/bin/pip（更换用户的pip）    ln -s /usr/local/python/bin/pip3.9 /usr/bin/pip  （更换系统的pip）
+- 安装anaconda
+	- [Free Download | Anaconda](https://www.anaconda.com/download#downloads)  下载后上传至服务器  wget https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh  -i https://pypi.tuna.tsinghua.edu.cn/simple
+	- bash Anaconda3-2019.03-Linux-x86_64.sh
+	- 两个yes，一个接受协议、一个安装路径、一个conda init    默认的可能为no，所以慢一点enter
+	- 重启终端后可以使用conda指令
+- 安装GPU版本的pytorch (**python必须是3.9版本**！！！)
+	- 如果是购买弹性云服务器，则选择tesla配置，即已经安装好cuda的驱动
+	- nvida-smi 查看CUDA版本 (或 nvcc --version)
+	- [Previous PyTorch Versions | PyTorch](https://pytorch.org/get-started/previous-versions/)  下载对应版本的pytorch，如果找不到，版本向下兼容 
+	- pip install torch==1.10.1+cu111 torchvision==0.11.2+cu111 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu111/torch_stable.html  -i https://pypi.tuna.tsinghua.edu.cn/simple 
+	- 验证是否成功
+		- python  
+		- import torch   
+		- print(torch.cuda.is_available())
+		- torch.cuda.current_device()      (输出所有可用的GPU编号，输出0即为第一个GPU)
+	- 如果发现cuda不管用，而自己是买的华为弹性云服务器，配置和第一步一样，参考：[(53条消息) NVIDIA驱动失效简单解决方案：NVIDIA-SMI has failed because it couldn‘t communicate with the NVIDIA driver._AI 菌的博客-CSDN博客](https://blog.csdn.net/wjinjie/article/details/108997692)
+- 安装依赖
+	- cd yolov5
+	- pip install -r requirements.txt   -i https://pypi.tuna.tsinghua.edu.cn/simple 
+- 无法显示图形化界面报错
+	- ```qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "/root/anaconda3/envs/yolov5/lib/python3.9/site-packages/cv2/qt/plugins" even though it was found. This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem. Available platform plugins are: xcb.```
+	- 此时需要将程序中所有和 imshow有关的代码全部注释即可
+- 安装flask
+	- pip install flask -i https://pypi.tuna.tsinghua.edu.cn/simple 
+- https://blog.csdn.net/weixin_41653613/article/details/126369337  --- 某报错
